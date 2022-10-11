@@ -68,10 +68,21 @@ public class Order {
     @Column(name = "order_status")
     private String status;
 
+    @Column(name = "payment_method")
+    private String paymentMethod;
+
     @ManyToMany(cascade = { CascadeType.MERGE }, fetch = FetchType.EAGER)
     @JoinTable(name = "order_coupons", joinColumns = {
             @JoinColumn(name = "order_id_pk") }, inverseJoinColumns = { @JoinColumn(name = "coupon_id_pk") })
     List<Coupon> coupons = new ArrayList<>();
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
 
     public Long getId() {
         return this.id;

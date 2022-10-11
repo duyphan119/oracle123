@@ -1,5 +1,6 @@
 package com.api.shoesshop.services.impl;
 
+import java.util.Calendar;
 import java.util.Map;
 import java.util.Optional;
 
@@ -22,6 +23,33 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Page<Order> findAll(Map<String, String> query) {
         Pageable pageable = Helper.getPageable(query);
+        String fullName = query.get("full_name");
+        String phone = query.get("phone");
+        String province = query.get("province");
+        String district = query.get("district");
+        String ward = query.get("ward");
+        String address = query.get("address");
+        String createdAt = query.get("created_at");
+        System.out.println(fullName);
+        if (fullName != null) {
+            return orderRepository.findByFullNameContaining(fullName, pageable);
+        }
+        if (phone != null) {
+            return orderRepository.findByPhoneContaining(phone, pageable);
+        }
+        if (province != null) {
+            return orderRepository.findByProvinceContaining(province, pageable);
+        }
+        if (district != null) {
+            return orderRepository.findByDistrictContaining(district, pageable);
+        }
+        if (ward != null) {
+            return orderRepository.findByWardContaining(ward, pageable);
+        }
+        if (address != null) {
+            return orderRepository.findByAddressContaining(address, pageable);
+        }
+
         return orderRepository.findAll(pageable);
     }
 

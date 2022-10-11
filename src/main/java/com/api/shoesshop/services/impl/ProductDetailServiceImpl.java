@@ -23,6 +23,23 @@ public class ProductDetailServiceImpl implements ProductDetailService {
     @Override
     public Page<ProductDetail> findAll(Map<String, String> query) {
         Pageable pageable = Helper.getPageable(query);
+        String sku = query.get("sku");
+        String inventory = query.get("inventory");
+        String productName = query.get("product_name");
+        String variantValue = query.get("variant_value");
+
+        if (sku != null) {
+            return productDetailRepository.findBySkuContaining(sku, pageable);
+        }
+        if (inventory != null) {
+            return productDetailRepository.findByInventory(Integer.parseInt(inventory), pageable);
+        }
+        if (productName != null) {
+            return productDetailRepository.findByProduct_NameContaining(productName, pageable);
+        }
+        if (variantValue != null) {
+            return productDetailRepository.findByVariantValues_ValueContaining(variantValue, pageable);
+        }
 
         return productDetailRepository.findAll(pageable);
     }
@@ -47,7 +64,6 @@ public class ProductDetailServiceImpl implements ProductDetailService {
     public ProductDetail update(ProductDetail productDetail, long id) {
         ProductDetail exiProductDetail = productDetailRepository.findById(id).get();
         if (exiProductDetail != null) {
-            exiProductDetail.setTitle(productDetail.getTitle());
             exiProductDetail.setSku(productDetail.getSku());
             exiProductDetail.setThumbnail(productDetail.getThumbnail());
             exiProductDetail.setInventory(productDetail.getInventory());

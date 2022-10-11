@@ -15,4 +15,16 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByAccountId(long accountId);
 
     Page<Order> findByAccountId(long accountId, Pageable pageable);
+
+    Page<Order> findByFullNameContaining(String fullName, Pageable pageable);
+
+    Page<Order> findByPhoneContaining(String phone, Pageable pageable);
+
+    Page<Order> findByProvinceContaining(String province, Pageable pageable);
+
+    Page<Order> findByDistrictContaining(String district, Pageable pageable);
+
+    Page<Order> findByWardContaining(String ward, Pageable pageable);
+
+    Page<Order> findByAddressContaining(String address, Pageable pageable);
 }

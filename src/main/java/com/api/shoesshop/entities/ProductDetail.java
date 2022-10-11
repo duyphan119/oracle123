@@ -23,9 +23,6 @@ public class ProductDetail {
     @Column(name = "product_detail_id")
     private Long id;
 
-    @Column(name = "title", nullable = false)
-    private String title;
-
     @Column(name = "sku", nullable = false)
     private String sku;
 
@@ -57,14 +54,6 @@ public class ProductDetail {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getTitle() {
-        return this.title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getSku() {
