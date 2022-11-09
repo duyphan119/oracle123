@@ -1,5 +1,6 @@
 package com.api.shoesshop.services.impl;
 
+import java.lang.StackWalker.Option;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -60,19 +61,12 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public Coupon check(long accountId, int price, String code) {
-        List<Order> orders = orderRepository.findByAccountId(accountId);
-        for (int i = 0; i < orders.size(); i++) {
-            List<Coupon> coupons = orders.get(i).getCoupons();
-            for (int j = 0; j < coupons.size(); j++) {
-                if (coupons.get(j).getCode().equals(code) == true) {
-                    return null;
-                }
-            }
-        }
-        Optional<Coupon> optional = couponRepository.findByCodeAndMinPriceLessThanEqual(code,
-                price);
-        if (optional.isPresent()) {
+    public Coupon check(long accountId, String code) {
+        Optional<Order> optionalOrder = orderRepository.findByAccountIdAndCoupon_Code(accountId, code);
+        if (optionalOrder.isPresent() == true)
+            return null;
+        Optional<Coupon> optional = couponRepository.findByCode(code);
+        if (optional.isPresent() == true) {
             if (optional.get().getEndDate().compareTo(new Date()) == 1)
                 return optional.get();
         }

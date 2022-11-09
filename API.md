@@ -37,7 +37,7 @@ newPassword:"string"
 
 # Xem thông tin tài khoản: <GET> (token)
 
-url: /auth/my-profile/read
+url: /auth/my-profile
 
 # Upload 1 hình
 
@@ -48,25 +48,25 @@ image:File
 
 # Lấy màu sắc, kích cỡ: <GET>
 
-url: /variant/read
+url: /variant
 
 # Lấy tất cả category: <GET>
 
-url: /category/read?parent_id=null
+url: /category?parent_id=null
 query example:{
 parent_id:null
 }
 
 # Lấy tất cả sản phẩm: <GET>
 
-url: /product/read
+url: /product
 query example:{
 alias: "nike-product"
 }
 
 # Lấy các sản phẩm theo danh mục: <GET>
 
-url: /product/category/read
+url: /product/category
 query example:{
 alias:"nike",
 min_price:1000000,
@@ -76,11 +76,11 @@ variant_value_ids: 2,4,6
 
 # Xem giỏ hàng của mình: <GET> (token)
 
-url: /cart/account/read
+url: /cart/account
 
 # Thêm giỏ hàng: <POST> (token)
 
-url: /cart-item/create
+url: /cart-item
 body: {
 productDetailId: "string",
 quantity: number
@@ -88,7 +88,7 @@ quantity: number
 
 # Cập nhật số lượng trong giỏ hàng: <PATCH> (token)
 
-url: /cart-item/update/{cartItemId}
+url: /cart-item/{cartItemId}
 body: {
 productDetailId: "string",
 quantity: number
@@ -96,15 +96,15 @@ quantity: number
 
 # Xóa giỏ hàng: <DELETE> (token)
 
-url: /cart-item/delete/{cartItemId}
+url: /cart-item/{cartItemId}
 
 # Xem các đơn hàng của mình: <GET> (token)
 
-url: /order/account/read
+url: /order/account
 
 # Tạo đơn hàng: <POST> (token)
 
-url: /order/create
+url: /order
 body: {
 province:"string",
 district:"string",
@@ -114,25 +114,25 @@ address: "string"
 
 # Cập nhật trạng thái đơn hàng: <PATCH> (token: admin)
 
-url: /order/update/{orderId}
+url: /order/{orderId}
 body:{
 status: "string" ["Đang xử lý", "Đang vận chuyển", "Vận chuyển thành công"]
 }
 
 # Xem danh sách yêu thích của mình: <GET> (token)
 
-url: /wishlist/account/read
+url: /wishlist/account
 
 # Yêu thích sản phẩm: <POST> (token)
 
-url: /wishlist/create
+url: /wishlist
 body:{
 productId:"number"
 }
 
 # Bỏ yêu thích sản phẩm: <DELETE> (token)
 
-url: /wishlist/delete/{wishlistItemId}
+url: /wishlist/{wishlistItemId}
 
 # Xem doanh thu các tháng trong năm: <GET> (token: admin)
 

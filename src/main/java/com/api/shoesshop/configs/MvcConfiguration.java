@@ -20,37 +20,37 @@ public class MvcConfiguration implements WebMvcConfigurer {
     // public void addInterceptors(InterceptorRegistry registry) {
     // registry.addInterceptor(new AdminInterceptor())
     // .addPathPatterns(
-    // "/product/create",
-    // "/product/update/*",
-    // "/product/delete/*",
-    // "/product-detail/create",
-    // "/product-detail/update/*",
-    // "/product-detail/delete/*",
-    // "/product/category/create",
-    // "/category/create",
-    // "/category/update/*",
-    // "/category/delete/*",
-    // "/account/create",
-    // "/account/update/*",
-    // "/account/delete/*",
-    // "/coupon/create",
-    // "/coupon/update/*",
-    // "/coupon/delete/*",
-    // "/variant/create",
-    // "/variant/update/*",
-    // "/variant/delete/*",
-    // "/variant-value/create",
-    // "/variant-value/update/*",
-    // "/variant-value/delete/*");
+    // "/product",
+    // "/product/*",
+    // "/product/*",
+    // "/product-detail",
+    // "/product-detail/*",
+    // "/product-detail/*",
+    // "/product/category",
+    // "/category",
+    // "/category/*",
+    // "/category/*",
+    // "/account",
+    // "/account/*",
+    // "/account/*",
+    // "/coupon",
+    // "/coupon/*",
+    // "/coupon/*",
+    // "/variant",
+    // "/variant/*",
+    // "/variant/*",
+    // "/variant-value",
+    // "/variant-value/*",
+    // "/variant-value/*");
     // registry.addInterceptor(new LoginInterceptor())
     // .addPathPatterns(
     // // "/auth/my-profile",
-    // // "/cart/account/read",
+    // // "/cart/account",
     // // "/auth/change-password",
-    // // "/cart-item/create",
-    // // "/cart-item/update/*",
-    // // "/cart-item/delete/*",
-    // // "/order/account/read",
+    // // "/cart-item",
+    // // "/cart-item/*",
+    // // "/cart-item/*",
+    // // "/order/account",
     // // "/wishlist/*"
     // );
     // }
@@ -82,7 +82,7 @@ public class MvcConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**");
+        registry.addMapping("/api/**");
     }
 
 }

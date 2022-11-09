@@ -1,6 +1,5 @@
 package com.api.shoesshop.services;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -11,7 +10,7 @@ import com.api.shoesshop.entities.Product;
 public interface ProductService {
     Page<Product> findAll(Map<String, String> query);
 
-    List<Product> search(String q);
+    Page<Product> search(Map<String, String> query);
 
     Optional<Product> findById(long id);
 
@@ -22,5 +21,7 @@ public interface ProductService {
     void delete(long id);
 
     long count();
+
+    Page<Product> recommend(Map<String, String> query);
 
 }

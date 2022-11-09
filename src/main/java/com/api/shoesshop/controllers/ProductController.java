@@ -32,10 +32,21 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @GetMapping(value = "/product/read")
+    @GetMapping(value = "/api/product")
     public ResponseEntity<String> findAll(@RequestParam Map<String, String> query) {
         try {
-            Page<Product> page = productService.findAll(query);
+            // if (query.get("category_alias") != null) {
+            // Page<ProductCategory> page = productCategoryService.findAll(query,
+            // variantValueIds);
+            // List<Product> products = new ArrayList<>();
+            // for (int i = 0; i < page.getContent().size(); i++) {
+            // products.add(page.getContent().get(i).getProduct());
+            // }
+            // return Helper.responseSuccess(new FindAll<>(products,
+            // page.getTotalElements()));
+            // }
+            Page<Product> page = query.get("q") != null ? productService.search(query)
+                    : productService.findAll(query);
             return Helper.responseSuccess(new FindAll<>(page.getContent(), page.getTotalElements()));
         } catch (Exception e) {
             System.out.println(e);
@@ -43,7 +54,19 @@ public class ProductController {
         }
     }
 
-    @GetMapping(value = "/product/read/{id}")
+    @GetMapping(value = "/api/product/recommend")
+    public ResponseEntity<String> recommend(@RequestParam Map<String, String> query) {
+        try {
+
+            Page<Product> page = productService.recommend(query);
+            return Helper.responseSuccess(new FindAll<>(page.getContent(), page.getTotalElements()));
+        } catch (Exception e) {
+            System.out.println(e);
+            return Helper.responseError();
+        }
+    }
+
+    @GetMapping(value = "/api/product/{id}")
     public ResponseEntity<String> findById(@PathVariable(name = "id") long id) {
         try {
             Optional<Product> Product = productService.findById(id);
@@ -54,7 +77,7 @@ public class ProductController {
         }
     }
 
-    @PostMapping(value = "/product/create")
+    @PostMapping(value = "/api/product")
     public ResponseEntity<String> save(HttpServletRequest req, @RequestBody Product body) {
         if (AuthInterceptor.isAdmin(req) == true) {
             try {
@@ -67,7 +90,7 @@ public class ProductController {
         return Helper.responseUnauthorized();
     }
 
-    @PatchMapping(value = "/product/update/{id}")
+    @PatchMapping(value = "/api/product/{id}")
     public ResponseEntity<String> update(HttpServletRequest req, @RequestBody Product body,
             @PathVariable(name = "id") long id) {
         if (AuthInterceptor.isAdmin(req) == true) {
@@ -81,12 +104,12 @@ public class ProductController {
         return Helper.responseUnauthorized();
     }
 
-    @DeleteMapping(value = "/product/delete/{id}")
+    @DeleteMapping(value = "/api/product/{id}")
     public ResponseEntity<String> delete(HttpServletRequest req, @PathVariable(name = "id") long id) {
         if (AuthInterceptor.isAdmin(req) == true) {
             try {
                 productService.delete(id);
-                return Helper.responseSussessNoData();
+                return Helper.responseSuccessNoData();
             } catch (Exception e) {
                 System.out.println(e);
                 return Helper.responseError();

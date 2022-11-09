@@ -6,20 +6,20 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 
-import com.api.shoesshop.entities.ProductDetail;
+import com.api.shoesshop.entities.ProductVariant;
 
 public interface ProductDetailService {
-    Page<ProductDetail> findAll(Map<String, String> query);
+    Page<ProductVariant> findAll(Map<String, String> query);
 
-    List<ProductDetail> search(String q);
+    List<ProductVariant> search(String q);
 
-    Optional<ProductDetail> findById(long id);
+    Optional<ProductVariant> findById(long id);
 
-    ProductDetail save(ProductDetail productDetail);
+    ProductVariant save(ProductVariant productDetail);
 
-    List<ProductDetail> saveMany(Iterable<ProductDetail> entities);
+    List<ProductVariant> saveMany(Iterable<ProductVariant> entities);
 
-    ProductDetail update(ProductDetail productDetail, long id);
+    ProductVariant update(ProductVariant productDetail, long id);
 
     void delete(long id);
 

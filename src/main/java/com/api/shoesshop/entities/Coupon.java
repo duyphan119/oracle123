@@ -16,8 +16,8 @@ public class Coupon {
     @Column(name = "coupon_id")
     private Long id;
 
-    @Column(name = "min_price")
-    private int minPrice;
+    // @Column(name = "min_price")
+    // private int minPrice;
 
     @Column(name = "price_discount")
     private int priceDiscount;
@@ -39,13 +39,13 @@ public class Coupon {
         this.id = id;
     }
 
-    public void setMinPrice(int minPrice) {
-        this.minPrice = minPrice;
-    }
+    // public void setMinPrice(int minPrice) {
+    // this.minPrice = minPrice;
+    // }
 
-    public int getMinPrice() {
-        return minPrice;
-    }
+    // public int getMinPrice() {
+    // return minPrice;
+    // }
 
     public int getPriceDiscount() {
         return this.priceDiscount;

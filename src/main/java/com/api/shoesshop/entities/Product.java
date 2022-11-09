@@ -10,15 +10,16 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "products")
-
 public class Product implements Serializable {
     @Id
     @GeneratedValue
@@ -28,25 +29,69 @@ public class Product implements Serializable {
     @Column(name = "product_name", nullable = false)
     private String name;
 
-    @Column(name = "price", nullable = false)
-    private Integer price;
-
-    @Column(name = "new_price", nullable = false)
-    private Integer newPrice;
-
     @Column(name = "product_alias", nullable = false, unique = true)
     private String alias;
 
-    @Column(name = "thumbnail", nullable = false)
+    @Column(name = "thumbnail", nullable = true)
     private String thumbnail;
+
+    @Column(name = "description", nullable = false)
+    private String description;
 
     @Column(name = "created_at")
     @CreationTimestamp
     private Date createdAt;
 
+    @Column(name = "price", nullable = false)
+    private Integer price;
+
+    @Column(name = "sale_price", nullable = false)
+    private Integer salePrice;
+
     @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
     @JsonIgnoreProperties({ "product" })
-    Set<ProductDetail> productDetails;
+    Set<ProductVariant> productVariants;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
+    @JsonIgnoreProperties({ "product" })
+    @OrderBy("product_image_id")
+    Set<ProductImage> productImages;
+
+    @Column(name = "updated_at")
+    @UpdateTimestamp
+    private Date updatedAt;
+
+    public Integer getPrice() {
+        return this.price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
+    public Integer getSalePrice() {
+        return salePrice;
+    }
+
+    public void setSalePrice(Integer salePrice) {
+        this.salePrice = salePrice;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public Long getId() {
         return this.id;
@@ -62,22 +107,6 @@ public class Product implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Integer getPrice() {
-        return this.price;
-    }
-
-    public void setPrice(Integer price) {
-        this.price = price;
-    }
-
-    public Integer getNewPrice() {
-        return this.newPrice;
-    }
-
-    public void setNewPrice(Integer newPrice) {
-        this.newPrice = newPrice;
     }
 
     public String getAlias() {
@@ -104,12 +133,20 @@ public class Product implements Serializable {
         this.createdAt = createdAt;
     }
 
-    public Set<ProductDetail> getProductDetails() {
-        return this.productDetails;
+    public Set<ProductVariant> getProductVariants() {
+        return productVariants;
     }
 
-    public void setProductDetails(Set<ProductDetail> productDetails) {
-        this.productDetails = productDetails;
+    public void setProductVariants(Set<ProductVariant> productVariants) {
+        this.productVariants = productVariants;
+    }
+
+    public void setProductImages(Set<ProductImage> productImages) {
+        this.productImages = productImages;
+    }
+
+    public Set<ProductImage> getProductImages() {
+        return productImages;
     }
 
 }

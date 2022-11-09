@@ -1,6 +1,10 @@
 package com.api.shoesshop.controllers;
 
+import java.util.Optional;
+
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseCookie;
@@ -38,7 +42,7 @@ public class AuthController {
 
     private AuthService authService = new AuthService();
 
-    @PostMapping("/auth/register")
+    @PostMapping("/api/auth/register")
     public ResponseEntity<String> register(@RequestBody CreateAccountDTO body) {
         try {
             Account account = accountService.save(body);
@@ -53,14 +57,20 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/auth/login")
-    public ResponseEntity<String> login(@RequestBody LoginDTO body) {
+    @PostMapping("/api/auth/login")
+    public ResponseEntity<String> login(@RequestBody LoginDTO body, HttpServletResponse res) {
         try {
             Account account = accountService.login(body);
             String accessToken = authService.createAccessToken(account);
             String refreshToken = authService.createRefreshToken(account);
-            ResponseCookie.from("refresh_token", refreshToken).httpOnly(true).secure(false)
-                    .maxAge(authService.getRefreshTokenExpired());
+            // ResponseCookie.from("refresh_token",
+            // refreshToken).httpOnly(true).secure(false)
+            // .maxAge(authService.getRefreshTokenExpired());
+            Cookie jwtTokenCookie = new Cookie("refresh_token", refreshToken);
+            jwtTokenCookie.setMaxAge(authService.getRefreshTokenExpired());
+            jwtTokenCookie.setSecure(true);
+            jwtTokenCookie.setHttpOnly(true);
+            res.addCookie(jwtTokenCookie);
             return Helper.responseSuccess(new Auth(account, accessToken, refreshToken));
         } catch (Exception e) {
             System.out.println(e);
@@ -68,14 +78,17 @@ public class AuthController {
         }
     }
 
-    @GetMapping("/auth/my-profile")
+    @GetMapping("/api/auth/my-profile")
     public ResponseEntity<String> getProfile(HttpServletRequest req) {
+        System.out.println(
+                "------------------------------------------------Get Profile---------------------------------------------------");
         if (AuthInterceptor.isLoggedin(req) == true) {
             try {
                 if (req.getAttribute("account_id") != null) {
-                    Account account = accountService.findById(Long.parseLong(req.getAttribute("account_id").toString()))
-                            .get();
-                    return Helper.responseSuccess(account);
+                    Optional<Account> optional = accountService
+                            .findById(Long.parseLong(req.getAttribute("account_id").toString()));
+                    if (optional.isPresent() == true)
+                        return Helper.responseSuccess(optional.get());
                 }
             } catch (Exception e) {
                 System.out.println(e);
@@ -86,21 +99,22 @@ public class AuthController {
         return Helper.responseUnauthorized();
     }
 
-    @PostMapping("/auth/logout")
+    @PostMapping("/api/auth/logout")
     public ResponseEntity<String> logout() {
         try {
             ResponseCookie.from("refresh_token", null).httpOnly(true).secure(false)
                     .maxAge(0);
-            return Helper.responseSussessNoData();
+            return Helper.responseSuccessNoData();
         } catch (Exception e) {
             System.out.println(e);
             return Helper.responseError();
         }
     }
 
-    @PostMapping("/auth/refresh-token")
+    @PostMapping("/api/auth/refresh-token")
     public ResponseEntity<String> refreshToken(@CookieValue(name = "refresh_token") String refreshToken,
-            @RequestBody(required = false) RefreshTokenDTO dto) {
+            @RequestBody(required = false) RefreshTokenDTO dto, HttpServletResponse res) {
+        System.out.println("-----------------refreshToken: " + refreshToken + "-------------");
         try {
             if (refreshToken != null) {
                 Claims claims = Jwts.parserBuilder()
@@ -114,6 +128,11 @@ public class AuthController {
                 account.setAccountRole(claims.get("role", String.class));
                 String accessToken = authService.createAccessToken(account);
                 String _refreshToken = authService.createRefreshToken(account);
+                Cookie jwtTokenCookie = new Cookie("refresh_token", _refreshToken);
+                jwtTokenCookie.setMaxAge(authService.getRefreshTokenExpired());
+                jwtTokenCookie.setSecure(true);
+                jwtTokenCookie.setHttpOnly(true);
+                res.addCookie(jwtTokenCookie);
                 return Helper.responseSuccess(new Auth(accessToken, _refreshToken));
             } else if (dto != null) {
                 Claims claims = Jwts.parserBuilder()
@@ -127,8 +146,12 @@ public class AuthController {
                 account.setAccountRole(claims.get("role", String.class));
                 String accessToken = authService.createAccessToken(account);
                 String _refreshToken = authService.createRefreshToken(account);
-                ResponseCookie.from("refresh_token", refreshToken).httpOnly(true).secure(false)
-                        .maxAge(authService.getRefreshTokenExpired());
+                System.out.println("---------------------------------" + accessToken);
+                Cookie jwtTokenCookie = new Cookie("refresh_token", _refreshToken);
+                jwtTokenCookie.setMaxAge(authService.getRefreshTokenExpired());
+                jwtTokenCookie.setSecure(true);
+                jwtTokenCookie.setHttpOnly(true);
+                res.addCookie(jwtTokenCookie);
                 return Helper.responseSuccess(new Auth(accessToken, _refreshToken));
             }
 
@@ -139,7 +162,7 @@ public class AuthController {
         return Helper.responseUnauthorized();
     }
 
-    @PatchMapping("/auth/change-profile")
+    @PatchMapping("/api/auth/change-profile")
     public ResponseEntity<String> changeProfile(@RequestBody ChangeProfileDTO body, HttpServletRequest req) {
         if (AuthInterceptor.isLoggedin(req) == true) {
             try {
@@ -147,6 +170,8 @@ public class AuthController {
                 Account oldAccount = accountService.findById(id).get();
                 if (oldAccount != null) {
                     oldAccount.setFullName(body.getFullName());
+                    oldAccount.setEmail(body.getEmail());
+                    oldAccount.setPhone(body.getPhone());
                     Account newAccount = accountService.update(oldAccount, id);
                     if (newAccount != null) {
                         return Helper.responseSuccess(newAccount);
@@ -162,7 +187,7 @@ public class AuthController {
         return Helper.responseUnauthorized();
     }
 
-    @PatchMapping("/auth/change-password")
+    @PatchMapping("/api/auth/change-password")
     public ResponseEntity<String> changePassword(@RequestBody ChangePasswordDTO body, HttpServletRequest req) {
         if (AuthInterceptor.isLoggedin(req) == true) {
             try {
@@ -172,7 +197,7 @@ public class AuthController {
                     if (Helper.verifyPassword(body.getOldPassword(), oldAccount.getHashedPassword()) == true) {
                         Account account = accountService.changePassword(body.getNewPassword(), id);
                         if (account != null) {
-                            return Helper.responseSussessNoData();
+                            return Helper.responseSuccessNoData();
                         }
                     }
                 }

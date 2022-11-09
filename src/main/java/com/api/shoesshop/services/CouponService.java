@@ -17,5 +17,5 @@ public interface CouponService {
 
     Coupon findById(long id);
 
-    Coupon check(long accountId, int price, String code);
+    Coupon check(long accountId, String code);
 }

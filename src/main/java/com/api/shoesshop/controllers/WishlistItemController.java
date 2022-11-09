@@ -30,7 +30,7 @@ public class WishlistItemController {
     @Autowired
     private WishlistItemService wishlistItemService;
 
-    @GetMapping("/wishlist/account/read")
+    @GetMapping("/api/wishlist/account")
     public ResponseEntity<String> findByAccountId(HttpServletRequest req, @RequestParam Map<String, String> query) {
         if (AuthInterceptor.isLoggedin(req) == true) {
             long accountId = Long.parseLong(req.getAttribute("account_id").toString());
@@ -45,7 +45,7 @@ public class WishlistItemController {
         return Helper.responseUnauthorized();
     }
 
-    @PostMapping("/wishlist/create")
+    @PostMapping("/api/wishlist")
     public ResponseEntity<String> save(HttpServletRequest req, @RequestBody WishlistItem body) {
         if (AuthInterceptor.isLoggedin(req) == true) {
             try {
@@ -61,12 +61,12 @@ public class WishlistItemController {
 
     }
 
-    @DeleteMapping("/wishlist/delete/{id}")
+    @DeleteMapping("/api/wishlist/{id}")
     public ResponseEntity<String> save(HttpServletRequest req, @PathVariable long id) {
         if (AuthInterceptor.isLoggedin(req) == true) {
             try {
                 wishlistItemService.delete(id);
-                return Helper.responseSussessNoData();
+                return Helper.responseSuccessNoData();
             } catch (Exception e) {
                 System.out.println(e);
             }

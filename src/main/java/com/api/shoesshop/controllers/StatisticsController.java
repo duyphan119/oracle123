@@ -45,7 +45,7 @@ public class StatisticsController {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    @GetMapping("/statistics/revenue")
+    @GetMapping("/api/statistics/revenue")
     public ResponseEntity<String> getRevenues(HttpServletRequest req, @RequestParam Map<String, String> query) {
         if (AuthInterceptor.isAdmin(req) == true) {
             try {
@@ -139,7 +139,7 @@ public class StatisticsController {
         return Helper.responseUnauthorized();
     }
 
-    @GetMapping("/statistics/count")
+    @GetMapping("/api/statistics/count")
     public ResponseEntity<String> getCount(HttpServletRequest req, @RequestParam Map<String, String> query) {
         if (AuthInterceptor.isAdmin(req) == true) {
             try {

@@ -32,7 +32,7 @@ public class VariantValueController {
         @Autowired
         private VariantValueService variantValueService;
 
-        @GetMapping("/variant-value/read")
+        @GetMapping("/api/variant-value")
         public ResponseEntity<String> findAll(
                         @RequestParam Map<String, String> query) {
                 try {
@@ -45,7 +45,7 @@ public class VariantValueController {
 
         }
 
-        @GetMapping("/variant-value/read/all")
+        @GetMapping("/api/variant-value/all")
         public ResponseEntity<String> findAll() {
                 try {
                         List<VariantValue> list = variantValueService.findAll();
@@ -57,7 +57,7 @@ public class VariantValueController {
 
         }
 
-        @GetMapping(value = "/variant-value/read/{id}")
+        @GetMapping(value = "/api/variant-value/{id}")
         public ResponseEntity<String> findById(@PathVariable(name = "id") long id) {
                 try {
                         Optional<VariantValue> variantValue = variantValueService.findById(id);
@@ -68,7 +68,7 @@ public class VariantValueController {
                 }
         }
 
-        @PostMapping(value = "/variant-value/create")
+        @PostMapping(value = "/api/variant-value")
         public ResponseEntity<String> save(HttpServletRequest req, @RequestBody VariantValue body) {
                 if (AuthInterceptor.isAdmin(req) == true) {
                         try {
@@ -81,7 +81,7 @@ public class VariantValueController {
                 return Helper.responseUnauthorized();
         }
 
-        @PatchMapping(value = "/variant-value/update/{id}")
+        @PatchMapping(value = "/api/variant-value/{id}")
         public ResponseEntity<String> update(HttpServletRequest req, @RequestBody VariantValue body,
                         @PathVariable(name = "id") long id) {
                 if (AuthInterceptor.isAdmin(req) == true) {
@@ -95,12 +95,12 @@ public class VariantValueController {
                 return Helper.responseUnauthorized();
         }
 
-        @DeleteMapping(value = "/variant-value/delete/{id}")
+        @DeleteMapping(value = "/api/variant-value/{id}")
         public ResponseEntity<String> delete(HttpServletRequest req, @PathVariable(name = "id") long id) {
                 if (AuthInterceptor.isAdmin(req) == true) {
                         try {
                                 variantValueService.delete(id);
-                                return Helper.responseSussessNoData();
+                                return Helper.responseSuccessNoData();
                         } catch (Exception e) {
                                 System.out.println(e);
                                 return Helper.responseError();

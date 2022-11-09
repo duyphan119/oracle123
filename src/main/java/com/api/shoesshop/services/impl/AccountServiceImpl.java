@@ -35,14 +35,14 @@ public class AccountServiceImpl implements AccountService {
         String phone = query.get("phone");
         Pageable pageable = Helper.getPageable(query);
         if (email != null) {
-            return accountRepository.findByEmailContaining(email, pageable);
+            return accountRepository.findByEmailContainingAndAccountRoleNot(email, "Admin", pageable);
         } else if (fullName != null) {
-            return accountRepository.findByFullNameContaining(fullName, pageable);
+            return accountRepository.findByFullNameContainingAndAccountRoleNot(fullName, "Admin", pageable);
         } else if (phone != null) {
-            return accountRepository.findByPhoneContaining(phone, pageable);
+            return accountRepository.findByPhoneContainingAndAccountRoleNot(phone, "Admin", pageable);
         }
 
-        return accountRepository.findAll(pageable);
+        return accountRepository.findByAccountRoleNot("Admin", pageable);
     }
 
     @Override

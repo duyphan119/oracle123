@@ -9,7 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.api.shoesshop.entities.ProductDetail;
+import com.api.shoesshop.entities.ProductVariant;
 import com.api.shoesshop.repositories.ProductDetailRepository;
 import com.api.shoesshop.services.ProductDetailService;
 import com.api.shoesshop.utils.Helper;
@@ -21,16 +21,16 @@ public class ProductDetailServiceImpl implements ProductDetailService {
     private ProductDetailRepository productDetailRepository;
 
     @Override
-    public Page<ProductDetail> findAll(Map<String, String> query) {
+    public Page<ProductVariant> findAll(Map<String, String> query) {
         Pageable pageable = Helper.getPageable(query);
         String sku = query.get("sku");
         String inventory = query.get("inventory");
         String productName = query.get("product_name");
         String variantValue = query.get("variant_value");
 
-        if (sku != null) {
-            return productDetailRepository.findBySkuContaining(sku, pageable);
-        }
+        // if (sku != null) {
+        // return productDetailRepository.findBySkuContaining(sku, pageable);
+        // }
         if (inventory != null) {
             return productDetailRepository.findByInventory(Integer.parseInt(inventory), pageable);
         }
@@ -45,30 +45,31 @@ public class ProductDetailServiceImpl implements ProductDetailService {
     }
 
     @Override
-    public List<ProductDetail> search(String q) {
+    public List<ProductVariant> search(String q) {
 
         return null;
     }
 
     @Override
-    public Optional<ProductDetail> findById(long id) {
+    public Optional<ProductVariant> findById(long id) {
         return productDetailRepository.findById(id);
     }
 
     @Override
-    public ProductDetail save(ProductDetail productDetail) {
+    public ProductVariant save(ProductVariant productDetail) {
         return productDetailRepository.save(productDetail);
     }
 
     @Override
-    public ProductDetail update(ProductDetail productDetail, long id) {
-        ProductDetail exiProductDetail = productDetailRepository.findById(id).get();
+    public ProductVariant update(ProductVariant productDetail, long id) {
+        ProductVariant exiProductDetail = productDetailRepository.findById(id).get();
         if (exiProductDetail != null) {
-            exiProductDetail.setSku(productDetail.getSku());
-            exiProductDetail.setThumbnail(productDetail.getThumbnail());
+            // exiProductDetail.setSku(productDetail.getSku());
+            // exiProductDetail.setThumbnail(productDetail.getThumbnail());
             exiProductDetail.setInventory(productDetail.getInventory());
             exiProductDetail.setProductId(productDetail.getProductId());
-            exiProductDetail.setWeight(productDetail.getWeight());
+            exiProductDetail.setVariantValues(productDetail.getVariantValues());
+            // exiProductDetail.setWeight(productDetail.getWeight());
         }
         return productDetailRepository.save(exiProductDetail);
     }
@@ -86,7 +87,7 @@ public class ProductDetailServiceImpl implements ProductDetailService {
     }
 
     @Override
-    public List<ProductDetail> saveMany(Iterable<ProductDetail> entities) {
+    public List<ProductVariant> saveMany(Iterable<ProductVariant> entities) {
         return productDetailRepository.saveAll(entities);
     }
 }

@@ -1,6 +1,8 @@
 package com.api.shoesshop.services.impl;
 
-import java.util.Calendar;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 
@@ -21,7 +23,7 @@ public class OrderServiceImpl implements OrderService {
     private OrderRepository orderRepository;
 
     @Override
-    public Page<Order> findAll(Map<String, String> query) {
+    public Page<Order> findAll(Map<String, String> query) throws ParseException {
         Pageable pageable = Helper.getPageable(query);
         String fullName = query.get("full_name");
         String phone = query.get("phone");
@@ -29,28 +31,33 @@ public class OrderServiceImpl implements OrderService {
         String district = query.get("district");
         String ward = query.get("ward");
         String address = query.get("address");
-        String createdAt = query.get("created_at");
-        System.out.println(fullName);
+        String begin = query.get("begin");
+        String end = query.get("end");
+        if (begin != null) {
+            return orderRepository.findByCreatedAtBetween(new SimpleDateFormat("yyyy-MM-dd").parse(begin),
+                    end != null ? new SimpleDateFormat("yyyy-MM-dd").parse(end) : new Date(), pageable);
+        }
+
         if (fullName != null) {
             return orderRepository.findByFullNameContaining(fullName, pageable);
         }
         if (phone != null) {
             return orderRepository.findByPhoneContaining(phone, pageable);
         }
-        if (province != null) {
-            return orderRepository.findByProvinceContaining(province, pageable);
-        }
-        if (district != null) {
-            return orderRepository.findByDistrictContaining(district, pageable);
-        }
-        if (ward != null) {
-            return orderRepository.findByWardContaining(ward, pageable);
-        }
+        // if (province != null) {
+        // return orderRepository.findByProvinceContaining(province, pageable);
+        // }
+        // if (district != null) {
+        // return orderRepository.findByDistrictContaining(district, pageable);
+        // }
+        // if (ward != null) {
+        // return orderRepository.findByWardContaining(ward, pageable);
+        // }
         if (address != null) {
             return orderRepository.findByAddressContaining(address, pageable);
         }
 
-        return orderRepository.findAll(pageable);
+        return orderRepository.findByStatus(null, pageable);
     }
 
     @Override
@@ -85,8 +92,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Page<Order> findByAccount(long accountId, Map<String, String> query) {
+    public Page<Order> findByAccount(long accountId, Map<String, String> query) throws ParseException {
         Pageable pageable = Helper.getPageable(query);
+        String begin = query.get("begin");
+        String end = query.get("end");
+        if (begin != null) {
+            return orderRepository.findByCreatedAtBetween(new SimpleDateFormat("yyyy-MM-dd").parse(begin),
+                    end != null ? new SimpleDateFormat("yyyy-MM-dd").parse(end) : new Date(), pageable);
+        }
+
         Order order = new Order();
         order.setAccountId(accountId);
         return orderRepository.findAll(Example.of(order), pageable);

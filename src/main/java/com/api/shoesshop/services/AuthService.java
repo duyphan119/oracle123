@@ -45,7 +45,7 @@ public class AuthService {
                 .claim("id", "" + account.getId())
                 .claim("role", "" + account.getAccountRole())
                 .setIssuedAt(new Date())
-                .setExpiration(Date.from(now.plus(300, ChronoUnit.MINUTES)))
+                .setExpiration(Date.from(now.plus(1, ChronoUnit.MINUTES)))
                 .signWith(ACCESS_TOKEN_SECRET, SignatureAlgorithm.HS256)
                 .compact();
         return access_token;

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.api.shoesshop.entities.ProductDetail;
+import com.api.shoesshop.entities.ProductVariant;
 import com.api.shoesshop.interceptors.AuthInterceptor;
 import com.api.shoesshop.services.ProductDetailService;
 import com.api.shoesshop.types.FindAll;
@@ -29,38 +29,38 @@ import com.google.gson.Gson;
 @Controller
 
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
-public class ProductDetailController {
+public class ProductVariantController {
 
     @Autowired
     private ProductDetailService productDetailService;
 
-    @GetMapping(value = "/product-detail/read")
+    @GetMapping(value = "/api/product-variant")
     public ResponseEntity<String> findAll(@RequestParam Map<String, String> query) {
         try {
-            Page<ProductDetail> page = productDetailService.findAll(query);
+            Page<ProductVariant> page = productDetailService.findAll(query);
             return Helper.responseSuccess(new FindAll<>(page.getContent(), page.getTotalElements()));
         } catch (Exception e) {
             return Helper.responseError();
         }
     }
 
-    @GetMapping(value = "/product-detail/read/{id}")
+    @GetMapping(value = "/api/product-variant/{id}")
     public ResponseEntity<String> findById(@PathVariable(name = "id") long id) {
 
         try {
-            Optional<ProductDetail> ProductDetail = productDetailService.findById(id);
+            Optional<ProductVariant> ProductDetail = productDetailService.findById(id);
             return Helper.responseSuccess(ProductDetail.get());
         } catch (Exception e) {
         }
         return Helper.responseError();
     }
 
-    @PostMapping(value = "/product-detail/create")
-    public ResponseEntity<String> save(HttpServletRequest req, @RequestBody ProductDetail body) {
+    @PostMapping(value = "/api/product-variant")
+    public ResponseEntity<String> save(HttpServletRequest req, @RequestBody ProductVariant body) {
         if (AuthInterceptor.isAdmin(req) == true) {
             try {
                 System.out.println(new Gson().toJson(body));
-                ProductDetail productDetail = productDetailService.save(body);
+                ProductVariant productDetail = productDetailService.save(body);
                 return Helper.responseCreated(productDetail);
             } catch (Exception e) {
                 System.out.println(e);
@@ -70,12 +70,12 @@ public class ProductDetailController {
         return Helper.responseUnauthorized();
     }
 
-    @PostMapping(value = "/product-detail/create/many")
-    public ResponseEntity<String> saveMany(HttpServletRequest req, @RequestBody Iterable<ProductDetail> body) {
+    @PostMapping(value = "/api/product-variant/many")
+    public ResponseEntity<String> saveMany(HttpServletRequest req, @RequestBody Iterable<ProductVariant> body) {
         if (AuthInterceptor.isAdmin(req) == true) {
             try {
                 System.out.println(new Gson().toJson(body));
-                List<ProductDetail> productDetail = productDetailService.saveMany(body);
+                List<ProductVariant> productDetail = productDetailService.saveMany(body);
                 return Helper.responseCreated(productDetail);
             } catch (Exception e) {
                 System.out.println(e);
@@ -85,12 +85,12 @@ public class ProductDetailController {
         return Helper.responseUnauthorized();
     }
 
-    @PatchMapping(value = "/product-detail/update/{id}")
-    public ResponseEntity<String> update(HttpServletRequest req, @RequestBody ProductDetail body,
+    @PatchMapping(value = "/api/product-variant/{id}")
+    public ResponseEntity<String> update(HttpServletRequest req, @RequestBody ProductVariant body,
             @PathVariable(name = "id") long id) {
         if (AuthInterceptor.isAdmin(req) == true) {
             try {
-                ProductDetail productDetail = productDetailService.update(body, id);
+                ProductVariant productDetail = productDetailService.update(body, id);
                 return Helper.responseSuccess(productDetail);
             } catch (Exception e) {
                 System.out.println(e);
@@ -100,12 +100,12 @@ public class ProductDetailController {
         return Helper.responseUnauthorized();
     }
 
-    @DeleteMapping(value = "/product-detail/delete/{id}")
+    @DeleteMapping(value = "/api/product-variant/{id}")
     public ResponseEntity<String> delete(HttpServletRequest req, @PathVariable(name = "id") long id) {
         if (AuthInterceptor.isAdmin(req) == true) {
             try {
                 productDetailService.delete(id);
-                return Helper.responseSussessNoData();
+                return Helper.responseSuccessNoData();
             } catch (Exception e) {
             }
             return Helper.responseError();

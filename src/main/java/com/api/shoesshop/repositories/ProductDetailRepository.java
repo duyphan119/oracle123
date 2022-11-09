@@ -4,14 +4,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.api.shoesshop.entities.ProductDetail;
+import com.api.shoesshop.entities.ProductVariant;
 
-public interface ProductDetailRepository extends JpaRepository<ProductDetail, Long> {
-    Page<ProductDetail> findBySkuContaining(String sku, Pageable pageable);
+public interface ProductDetailRepository extends JpaRepository<ProductVariant, Long> {
+    // Page<ProductVariant> findBySkuContaining(String sku, Pageable pageable);
 
-    Page<ProductDetail> findByInventory(int inventory, Pageable pageable);
+    Page<ProductVariant> findByInventory(int inventory, Pageable pageable);
 
-    Page<ProductDetail> findByProduct_NameContaining(String productName, Pageable pageable);
+    Page<ProductVariant> findByProduct_NameContaining(String productName, Pageable pageable);
 
-    Page<ProductDetail> findByVariantValues_ValueContaining(String value, Pageable pageable);
+    Page<ProductVariant> findByVariantValues_ValueContaining(String value, Pageable pageable);
 }

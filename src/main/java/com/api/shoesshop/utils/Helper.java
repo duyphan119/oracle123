@@ -63,7 +63,7 @@ public class Helper {
         return new ResponseEntity<>(toJson(new ResponseData<>(201, "Success", data)), HttpStatus.OK);
     }
 
-    public static ResponseEntity<String> responseSussessNoData() {
+    public static ResponseEntity<String> responseSuccessNoData() {
         return new ResponseEntity<>(toJson(new ResponseData<>(200, "Success")), HttpStatus.OK);
     }
 

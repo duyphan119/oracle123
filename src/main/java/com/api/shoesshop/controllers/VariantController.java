@@ -32,7 +32,7 @@ public class VariantController {
     @Autowired
     private VariantService variantService;
 
-    @GetMapping(value = "/variant/read")
+    @GetMapping(value = "/api/variant")
     public ResponseEntity<String> findAll(@RequestParam Map<String, String> query) {
         try {
             Page<Variant> page = variantService.findAll(query);
@@ -44,7 +44,7 @@ public class VariantController {
 
     }
 
-    @GetMapping(value = "/variant/read/{id}")
+    @GetMapping(value = "/api/variant/{id}")
     public ResponseEntity<String> findById(@PathVariable(name = "id") long id) {
         try {
             Optional<Variant> variant = variantService.findById(id);
@@ -55,7 +55,7 @@ public class VariantController {
         }
     }
 
-    @PostMapping(value = "/variant/create")
+    @PostMapping(value = "/api/variant")
     public ResponseEntity<String> save(HttpServletRequest req, @RequestBody Variant body) {
         if (AuthInterceptor.isAdmin(req) == true) {
             try {
@@ -68,7 +68,7 @@ public class VariantController {
         return Helper.responseUnauthorized();
     }
 
-    @PatchMapping(value = "/variant/update/{id}")
+    @PatchMapping(value = "/api/variant/{id}")
     public ResponseEntity<String> update(HttpServletRequest req, @RequestBody Variant body,
             @PathVariable(name = "id") long id) {
         if (AuthInterceptor.isAdmin(req) == true) {
@@ -82,12 +82,12 @@ public class VariantController {
         return Helper.responseUnauthorized();
     }
 
-    @DeleteMapping(value = "/variant/delete/{id}")
+    @DeleteMapping(value = "/api/variant/{id}")
     public ResponseEntity<String> delete(HttpServletRequest req, @PathVariable(name = "id") long id) {
         if (AuthInterceptor.isAdmin(req) == true) {
             try {
                 variantService.delete(id);
-                return Helper.responseSussessNoData();
+                return Helper.responseSuccessNoData();
             } catch (Exception e) {
                 System.out.println(e);
                 return Helper.responseError();

@@ -1,5 +1,6 @@
 package com.api.shoesshop.services;
 
+import java.text.ParseException;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
@@ -7,9 +8,9 @@ import org.springframework.data.domain.Page;
 import com.api.shoesshop.entities.Order;
 
 public interface OrderService {
-    Page<Order> findAll(Map<String, String> query);
+    Page<Order> findAll(Map<String, String> query) throws ParseException;
 
-    Page<Order> findByAccount(long accountId, Map<String, String> query);
+    Page<Order> findByAccount(long accountId, Map<String, String> query) throws ParseException;
 
     Order findById(Long id);
 

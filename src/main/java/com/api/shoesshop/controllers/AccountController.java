@@ -32,7 +32,7 @@ public class AccountController {
         @Autowired
         private AccountService accountService;
 
-        @GetMapping("/account/read")
+        @GetMapping("/api/account")
         public ResponseEntity<String> findAllAccounts(HttpServletRequest req, @RequestParam Map<String, String> query) {
                 if (AuthInterceptor.isAdmin(req) == true) {
                         try {
@@ -47,7 +47,7 @@ public class AccountController {
                 return Helper.responseUnauthorized();
         }
 
-        @PostMapping("/account/create")
+        @PostMapping("/api/account")
         public ResponseEntity<String> createAccount(HttpServletRequest req, @RequestBody CreateAccountDTO body) {
                 if (AuthInterceptor.isAdmin(req) == true) {
                         try {
@@ -62,7 +62,7 @@ public class AccountController {
                 return Helper.responseUnauthorized();
         }
 
-        @GetMapping("/account/read/{id}")
+        @GetMapping("/api/account/{id}")
         public ResponseEntity<String> findById(HttpServletRequest req, @PathVariable(name = "id") long id) {
                 if (AuthInterceptor.isAdmin(req) == true) {
                         try {
@@ -79,7 +79,7 @@ public class AccountController {
                 return Helper.responseUnauthorized();
         }
 
-        @PatchMapping("/account/update/{id}")
+        @PatchMapping("/api/account/{id}")
         public ResponseEntity<String> update(HttpServletRequest req, @RequestBody Account body,
                         @PathVariable(name = "id") long id) {
                 if (AuthInterceptor.isAdmin(req) == true) {
@@ -95,12 +95,12 @@ public class AccountController {
                 return Helper.responseUnauthorized();
         }
 
-        @DeleteMapping("/account/delete/{id}")
+        @DeleteMapping("/api/account/{id}")
         public ResponseEntity<String> delete(HttpServletRequest req, @PathVariable(name = "id") long id) {
                 if (AuthInterceptor.isAdmin(req) == true) {
                         try {
                                 accountService.delete(id);
-                                return Helper.responseSussessNoData();
+                                return Helper.responseSuccessNoData();
                         } catch (Exception e) {
                                 System.out.println(e);
                                 return Helper.responseError();

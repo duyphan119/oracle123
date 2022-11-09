@@ -1,7 +1,10 @@
 package com.api.shoesshop.entities;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,19 +18,16 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 @Entity
-@Table(name = "product_details")
-public class ProductDetail {
+@Table(name = "product_variants")
+public class ProductVariant {
     @Id
     @GeneratedValue
-    @Column(name = "product_detail_id")
+    @Column(name = "product_variant_id")
     private Long id;
-
-    @Column(name = "sku", nullable = false)
-    private String sku;
-
-    @Column(name = "thumbnail")
-    private String thumbnail;
 
     @Column(name = "product_id_pk", nullable = false)
     private long productId;
@@ -35,18 +35,39 @@ public class ProductDetail {
     @Column(name = "inventory", nullable = false)
     private int inventory;
 
-    @Column(name = "weight", nullable = false)
-    private int weight;
-
     @ManyToOne(cascade = CascadeType.ALL, targetEntity = Product.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id_pk", referencedColumnName = "product_id", insertable = false, updatable = false)
     private Product product;
 
     @ManyToMany(cascade = { CascadeType.MERGE }, fetch = FetchType.EAGER)
     @JoinTable(name = "product_variant_details", joinColumns = {
-            @JoinColumn(name = "product_detail_id_pk") }, inverseJoinColumns = {
+            @JoinColumn(name = "product_variant_id_pk") }, inverseJoinColumns = {
                     @JoinColumn(name = "variant_value_id_pk") })
-    List<VariantValue> variantValues = new ArrayList<>();
+    Set<VariantValue> variantValues = new HashSet<>();
+
+    @Column(name = "created_at")
+    @CreationTimestamp
+    private Date createdAt;
+
+    @Column(name = "updated_at")
+    @UpdateTimestamp
+    private Date updatedAt;
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
 
     public Long getId() {
         return this.id;
@@ -54,22 +75,6 @@ public class ProductDetail {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getSku() {
-        return this.sku;
-    }
-
-    public void setSku(String sku) {
-        this.sku = sku;
-    }
-
-    public String getThumbnail() {
-        return this.thumbnail;
-    }
-
-    public void setThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
     }
 
     public long getProductId() {
@@ -88,14 +93,6 @@ public class ProductDetail {
         this.inventory = inventory;
     }
 
-    public int getWeight() {
-        return this.weight;
-    }
-
-    public void setWeight(int weight) {
-        this.weight = weight;
-    }
-
     public Product getProduct() {
         return this.product;
     }
@@ -104,11 +101,11 @@ public class ProductDetail {
         this.product = product;
     }
 
-    public List<VariantValue> getVariantValues() {
-        return this.variantValues;
+    public Set<VariantValue> getVariantValues() {
+        return variantValues;
     }
 
-    public void setVariantValues(List<VariantValue> variantValues) {
+    public void setVariantValues(Set<VariantValue> variantValues) {
         this.variantValues = variantValues;
     }
 

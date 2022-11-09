@@ -31,7 +31,7 @@ public class CouponController {
     @Autowired
     private CouponService couponService;
 
-    @GetMapping(value = "/coupon/read")
+    @GetMapping(value = "/api/coupon")
     public ResponseEntity<String> findAll(HttpServletRequest req, @RequestParam Map<String, String> query) {
         if (AuthInterceptor.isAdmin(req) == true) {
             try {
@@ -45,7 +45,7 @@ public class CouponController {
         return Helper.responseUnauthorized();
     }
 
-    @GetMapping(value = "/coupon/read/{id}")
+    @GetMapping(value = "/api/coupon/{id}")
     public ResponseEntity<String> findById(HttpServletRequest req, @PathVariable(name = "id") long id) {
         if (AuthInterceptor.isAdmin(req) == true) {
             try {
@@ -62,13 +62,12 @@ public class CouponController {
         return Helper.responseUnauthorized();
     }
 
-    @GetMapping(value = "/coupon/read/check")
-    public ResponseEntity<String> checkCoupon(HttpServletRequest req, @RequestParam(name = "code") String code,
-            @RequestParam(name = "price") int price) {
+    @GetMapping(value = "/api/coupon/check")
+    public ResponseEntity<String> checkCoupon(HttpServletRequest req, @RequestParam(name = "code") String code) {
         if (AuthInterceptor.isLoggedin(req) == true) {
             try {
                 long accountId = Long.parseLong(req.getAttribute("account_id").toString());
-                Coupon coupon = couponService.check(accountId, price, code);
+                Coupon coupon = couponService.check(accountId, code);
                 return Helper.responseSuccess(coupon);
             } catch (Exception e) {
                 System.out.println(e);
@@ -78,7 +77,7 @@ public class CouponController {
         return Helper.responseUnauthorized();
     }
 
-    @PostMapping(value = "/coupon/create")
+    @PostMapping(value = "/api/coupon")
     public ResponseEntity<String> save(HttpServletRequest req, @RequestBody Coupon body) {
         if (AuthInterceptor.isAdmin(req) == true) {
             try {
@@ -95,7 +94,7 @@ public class CouponController {
         return Helper.responseUnauthorized();
     }
 
-    @PatchMapping(value = "/coupon/update/{id}")
+    @PatchMapping(value = "/api/coupon/{id}")
     public ResponseEntity<String> update(HttpServletRequest req, @RequestBody Coupon body,
             @PathVariable(name = "id") long id) {
         if (AuthInterceptor.isAdmin(req) == true) {
@@ -113,12 +112,12 @@ public class CouponController {
         return Helper.responseUnauthorized();
     }
 
-    @DeleteMapping(value = "/coupon/delete/{id}")
+    @DeleteMapping(value = "/api/coupon/{id}")
     public ResponseEntity<String> delete(HttpServletRequest req, @PathVariable(name = "id") long id) {
         if (AuthInterceptor.isAdmin(req) == true) {
             try {
                 couponService.delete(id);
-                return Helper.responseSussessNoData();
+                return Helper.responseSuccessNoData();
             } catch (Exception e) {
                 System.out.println(e);
                 return Helper.responseError();

@@ -32,7 +32,7 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    @GetMapping("/category/read")
+    @GetMapping("/api/category")
     public ResponseEntity<String> findAll(@RequestParam Map<String, String> query) {
         try {
             categoryService.findAll(query);
@@ -45,7 +45,7 @@ public class CategoryController {
         }
     }
 
-    @GetMapping("/category/read/all")
+    @GetMapping("/api/category/all")
     public ResponseEntity<String> findAll(HttpServletRequest req) {
         if (AuthInterceptor.isAdmin(req) == true) {
             try {
@@ -61,7 +61,7 @@ public class CategoryController {
 
     }
 
-    @GetMapping("/category/read/{id}")
+    @GetMapping("/api/category/{id}")
     public ResponseEntity<String> findById(@PathVariable long id) {
         try {
             Category category = categoryService.findById(id);
@@ -73,7 +73,7 @@ public class CategoryController {
         }
     }
 
-    @PostMapping("/category/create")
+    @PostMapping("/api/category")
     public ResponseEntity<String> save(HttpServletRequest req, @RequestBody Category body) {
         if (AuthInterceptor.isAdmin(req) == true) {
             try {
@@ -91,7 +91,7 @@ public class CategoryController {
 
     }
 
-    @PatchMapping("/category/update/{id}")
+    @PatchMapping("/api/category/{id}")
     public ResponseEntity<String> update(HttpServletRequest req, @PathVariable long id, @RequestBody Category body) {
         if (AuthInterceptor.isAdmin(req) == true) {
             try {
@@ -108,12 +108,12 @@ public class CategoryController {
         return Helper.responseUnauthorized();
     }
 
-    @DeleteMapping("/category/delete/{id}")
+    @DeleteMapping("/api/category/{id}")
     public ResponseEntity<String> delete(HttpServletRequest req, @PathVariable long id) {
         if (AuthInterceptor.isAdmin(req) == true) {
             try {
                 categoryService.delete(id);
-                return Helper.responseSussessNoData();
+                return Helper.responseSuccessNoData();
             } catch (Exception e) {
                 System.out.println(e);
                 return Helper.responseError();

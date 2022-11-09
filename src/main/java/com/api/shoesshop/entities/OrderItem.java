@@ -17,20 +17,20 @@ public class OrderItem {
     private Long id;
 
     @Column
-    private int quantity;
+    private Integer quantity;
 
     @Column(name = "order_id_pk")
-    private long orderId;
+    private Long orderId;
 
     @Column
-    private int price;
+    private Integer price;
 
-    @Column(name = "product_detail_id_pk")
-    private Long productDetailId;
+    @Column(name = "product_variant_id_pk")
+    private Long productVariantId;
 
     @ManyToOne
-    @JoinColumn(name = "product_detail_id_pk", insertable = false, updatable = false)
-    private ProductDetail productDetail;
+    @JoinColumn(name = "product_variant_id_pk", insertable = false, updatable = false)
+    private ProductVariant productVariant;
 
     public Long getId() {
         return this.id;
@@ -40,44 +40,44 @@ public class OrderItem {
         this.id = id;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return this.quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 
-    public long getOrderId() {
+    public Long getOrderId() {
         return this.orderId;
     }
 
-    public void setOrderId(long orderId) {
+    public void setOrderId(Long orderId) {
         this.orderId = orderId;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return this.price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 
-    public Long getProductDetailId() {
-        return this.productDetailId;
+    public ProductVariant getProductVariant() {
+        return productVariant;
     }
 
-    public void setProductDetailId(Long productDetailId) {
-        this.productDetailId = productDetailId;
+    public void setProductVariant(ProductVariant productVariant) {
+        this.productVariant = productVariant;
     }
 
-    public ProductDetail getProductDetail() {
-        return this.productDetail;
+    public Long getProductVariantId() {
+        return productVariantId;
     }
 
-    public void setProductDetail(ProductDetail productDetail) {
-        this.productDetail = productDetail;
+    public void setProductVariantId(Long productVariantId) {
+        this.productVariantId = productVariantId;
     }
 
 }

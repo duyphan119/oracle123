@@ -27,22 +27,20 @@ public class FileUploadController {
         public String secure_url;
     }
 
-    @PostMapping("/upload/image/single")
+    @PostMapping("/api/upload/image/single")
     public ResponseEntity<String> uploadImage(HttpServletRequest req, @RequestParam("image") MultipartFile file) {
         try {
-            if (AuthInterceptor.isLoggedin(req) == true) {
-                Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
-                        "cloud_name", "dwhjftwvw",
-                        "api_key", "335652142568654",
-                        "api_secret", "rVXHGRE29TukCR3eUxZEyJlv3ME"));
-                Gson g = new Gson();
-                String str = Helper.toJson(cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap(
-                        "public_id",
-                        "shoes shop/user_upload/" + RandomStringUtils.randomAlphanumeric(10) + new Date().getTime())));
-                UploadResponse uploaded = g.fromJson(str, UploadResponse.class);
-                return Helper.responseSuccess(uploaded.secure_url);
-            }
-            return Helper.responseUnauthorized();
+            Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
+                    "cloud_name", "dwhjftwvw",
+                    "api_key", "335652142568654",
+                    "api_secret", "rVXHGRE29TukCR3eUxZEyJlv3ME"));
+            Gson g = new Gson();
+            String str = Helper.toJson(cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap(
+                    "public_id",
+                    "xshop/" + RandomStringUtils.randomAlphanumeric(10) + new Date().getTime())));
+            UploadResponse uploaded = g.fromJson(str, UploadResponse.class);
+            return Helper.responseSuccess(uploaded.secure_url);
+
         } catch (Exception e) {
             System.out.println(e);
             return Helper.responseError();
