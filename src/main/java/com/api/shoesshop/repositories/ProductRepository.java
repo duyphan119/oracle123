@@ -10,4 +10,5 @@ import com.api.shoesshop.entities.Product;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
         Page<Product> findByIdIn(List<Long> ids, Pageable pageable);
+
 }

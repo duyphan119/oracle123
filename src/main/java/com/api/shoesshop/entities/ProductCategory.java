@@ -1,34 +1,36 @@
 package com.api.shoesshop.entities;
 
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "product_categories")
 public class ProductCategory {
     @Id
     @GeneratedValue
-    @Column(name = "item_id")
+    @Column(name = "category_id")
     private Long id;
 
-    @Column(name = "category_id_pk")
-    private Long categoryId;
+    @Column(name = "category_name")
+    private String name;
 
-    @Column(name = "product_id_pk")
-    private Long productId;
+    @Column(name = "category_alias")
+    private String alias;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id_pk", insertable = false, updatable = false)
-    private Product product;
-
-    @ManyToOne
-    @JoinColumn(name = "category_id_pk", insertable = false, updatable = false)
-    private Category category;
+    @Column(name = "thumbnail")
+    private String thumbnail;
 
     public Long getId() {
         return this.id;
@@ -38,36 +40,28 @@ public class ProductCategory {
         this.id = id;
     }
 
-    public Long getCategoryId() {
-        return this.categoryId;
+    public String getName() {
+        return this.name;
     }
 
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Long getProductId() {
-        return this.productId;
+    public String getAlias() {
+        return this.alias;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
-    public Product getProduct() {
-        return this.product;
+    public String getThumbnail() {
+        return this.thumbnail;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    public Category getCategory() {
-        return this.category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
 }

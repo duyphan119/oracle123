@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -201,17 +202,33 @@ public class OrderController {
 	public ResponseEntity<String> update(HttpServletRequest req, @RequestBody Order body, @PathVariable Long id) {
 		if (AuthInterceptor.isAdmin(req) == true) {
 			try {
-				System.out.println(id);
-				System.out.println(body.getStatus());
-				Order order = orderService.updateStatus(id, body.getStatus());
-				if (order != null)
-					return Helper.responseSuccess(order);
+				Optional<Order> optional = orderRepository.findById(id);
+				if (optional.isPresent() == true && body.getStatus().equals("Đang xử lý") == false
+						&& optional.get().getStatus().equals("Đang xử lý") == true) {
+					Order order = optional.get();
+					Set<OrderItem> items = order.getItems();
+					Iterator<OrderItem> iterator = items.iterator();
+					boolean isOk = true;
+					while (iterator.hasNext() == true) {
 
-				return Helper.responseUnauthorized();
+						OrderItem item = iterator.next();
+						ProductVariant pv = item.getProductVariant();
+						if (item.getQuantity() > pv.getInventory()) {
+							isOk = false;
+							break;
+						}
+					}
+					if (isOk == true) {
+						order.setStatus(body.getStatus());
+						Order order1 = orderRepository.save(order);
+						if (order1 != null)
+							return Helper.responseSuccess(order1);
+					}
+				}
 			} catch (Exception e) {
 				System.out.println(e);
-				return Helper.responseError();
 			}
+			return Helper.responseError();
 		}
 		return Helper.responseUnauthorized();
 	}
@@ -230,9 +247,9 @@ public class OrderController {
 					while (iterator.hasNext() == true) {
 						OrderItem item = iterator.next();
 						item.setPrice(items.iterator().next().getProductVariant().getProduct().getSalePrice());
-						ProductVariant pv = item.getProductVariant();
-						pv.setInventory(pv.getInventory() - item.getQuantity());
-						productVariantRepository.save(pv);
+						// ProductVariant pv = item.getProductVariant();
+						// pv.setInventory(pv.getInventory() - item.getQuantity());
+						// productVariantRepository.save(pv);
 						orderItemRepository.save(item);
 					}
 					order.setCreatedAt(new Date());

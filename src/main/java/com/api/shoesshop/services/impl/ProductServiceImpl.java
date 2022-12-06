@@ -14,6 +14,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
 import com.api.shoesshop.entities.Product;
+import com.api.shoesshop.entities.ProductCategory;
+import com.api.shoesshop.repositories.ProductCategoryRepository;
 import com.api.shoesshop.repositories.ProductRepository;
 import com.api.shoesshop.services.ProductService;
 import com.api.shoesshop.utils.Helper;
@@ -26,6 +28,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private ProductCategoryRepository productCategoryRepository;
 
     @Override
     public Page<Product> findAll(Map<String, String> query) {
@@ -38,13 +42,13 @@ public class ProductServiceImpl implements ProductService {
         String minPrice = query.get("min_price");
         String maxPrice = query.get("max_price");
         String size = query.get("size");
-        String baseSql = "select distinct p.product_id from products p, product_variants pv, product_categories pc, categories c,"
+        String baseSql = "select distinct p.product_id from products p, product_variants pv, product_categories pc,"
                 + "product_variant_details pvd, variant_values vv where p.product_id = pv.product_id_pk "
-                + " and pc.category_id_pk = c.category_id and pc.product_id_pk = p.product_id  "
+                + " and pc.category_id = p.product_category_id_pk  "
                 + " and pvd.product_variant_id_pk = pv.product_variant_id and pvd.variant_value_id_pk = vv.variant_value_id ";
         String sql = baseSql;
         if (categoryAlias != null) {
-            sql += (" and c.category_alias='" + categoryAlias + "' ");
+            sql += (" and pc.category_alias='" + categoryAlias + "' ");
         }
         if (minPrice != null) {
             sql += (" and p.sale_price >=" + minPrice);
@@ -135,6 +139,11 @@ public class ProductServiceImpl implements ProductService {
             exiProduct.setName(product.getName());
             exiProduct.setAlias(product.getAlias());
             exiProduct.setThumbnail(product.getThumbnail());
+            exiProduct.setProductCategoryId(product.getProductCategoryId());
+            Optional<ProductCategory> optional = productCategoryRepository.findById(product.getProductCategoryId());
+            if (optional.isPresent())
+                exiProduct.setProductCategory(optional.get());
+
         }
         return productRepository.save(exiProduct);
     }

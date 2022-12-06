@@ -1,6 +1,10 @@
 package com.api.shoesshop.controllers;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -40,6 +44,36 @@ public class FileUploadController {
                     "xshop/" + RandomStringUtils.randomAlphanumeric(10) + new Date().getTime())));
             UploadResponse uploaded = g.fromJson(str, UploadResponse.class);
             return Helper.responseSuccess(uploaded.secure_url);
+
+        } catch (Exception e) {
+            System.out.println(e);
+            return Helper.responseError();
+        }
+    }
+
+    @PostMapping("/api/upload/image/multiple")
+    public ResponseEntity<String> uploadImages(HttpServletRequest req, @RequestParam("images") MultipartFile[] files) {
+        try {
+            Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
+                    "cloud_name", "dwhjftwvw",
+                    "api_key", "335652142568654",
+                    "api_secret", "rVXHGRE29TukCR3eUxZEyJlv3ME"));
+            Gson g = new Gson();
+            List<String> listUrl = new ArrayList<>();
+            Arrays.asList(files).stream().forEach(file -> {
+                String str;
+                try {
+                    str = Helper.toJson(cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap(
+                            "public_id",
+                            "xshop/" + RandomStringUtils.randomAlphanumeric(10) + new Date().getTime())));
+                    UploadResponse uploaded = g.fromJson(str, UploadResponse.class);
+                    listUrl.add(uploaded.secure_url);
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            });
+            return Helper.responseSuccess(listUrl);
 
         } catch (Exception e) {
             System.out.println(e);

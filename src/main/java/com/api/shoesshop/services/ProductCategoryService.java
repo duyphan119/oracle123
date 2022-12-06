@@ -10,11 +10,15 @@ import com.api.shoesshop.entities.ProductCategory;
 public interface ProductCategoryService {
     ProductCategory save(ProductCategory entity);
 
-    void deleteById(long id);
+    Page<ProductCategory> findAll(Map<String, String> query);
 
-    Page<ProductCategory> findAll(Map<String, String> query, List<String> variantValueIds);
+    List<ProductCategory> findAll2(Map<String, String> query);
 
-    List<ProductCategory> saveMany(Iterable<ProductCategory> entities);
+    void delete(Long id);
 
-    List<ProductCategory> findByProduct(long productId);
+    ProductCategory update(long id, ProductCategory entity);
+
+    ProductCategory findById(long id);
+
+    List<ProductCategory> findAll();
 }
